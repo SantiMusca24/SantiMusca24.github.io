@@ -120,6 +120,45 @@
   .section-head h2 { font-size: clamp(2rem, 4.6vw, 3rem); margin-bottom: 14px; }
   .section-head p { color: var(--bone-dim); margin: 0; }
 
+  /* Trailer: cover image first, YouTube loads on click */
+  .trailer {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    margin-bottom: clamp(36px, 6vw, 60px);
+    border: 3px solid var(--bone);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--ink);
+  }
+  .trailer-play {
+    all: unset;
+    cursor: pointer;
+    position: absolute; inset: 0;
+    display: block;
+  }
+  .trailer-play img { width: 100%; height: 100%; object-fit: cover; }
+  .trailer-label {
+    position: absolute; left: clamp(12px, 2.5vw, 24px); bottom: clamp(12px, 2.5vw, 24px);
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: "Pixelify Sans", monospace; font-weight: 700;
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    background: var(--bone); color: var(--ink);
+    padding: 8px 18px 8px 8px;
+    box-shadow: 4px 4px 0 var(--spot);
+    transition: transform .12s, box-shadow .12s;
+  }
+  .play-badge {
+    width: 40px; height: 40px;
+    display: grid; place-items: center;
+    background: var(--ink); color: var(--bone);
+    border-radius: 50%;
+  }
+  .play-badge svg { margin-left: 3px; }
+  .trailer-play:hover .trailer-label { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--spot); }
+  .trailer-play:focus-visible { outline: 3px solid var(--candle); outline-offset: -6px; }
+  .trailer iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  @media (prefers-reduced-motion: reduce) { .trailer-label, .trailer-play:hover .trailer-label { transition: none; transform: none; } }
+
   /* Misdealt */
   .game {
     display: grid;
@@ -244,6 +283,12 @@
       <div class="section-head">
         <h2>Misdealt</h2>
         <p>Current project at GregTheFrogStudios, an independent studio from Buenos Aires.</p>
+      </div>
+      <div class="trailer" id="trailer">
+        <button type="button" class="trailer-play" aria-label="Play the Misdealt trailer">
+          <img src="img/trailer-cover.jpg" width="1232" height="706" alt="Misdealt key art: a ghoul deals cards across a candlelit table to a crowned king.">
+          <span class="trailer-label"><span class="play-badge" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>Watch the trailer</span>
+        </button>
       </div>
       <div class="game">
         <div>
@@ -374,6 +419,18 @@
 <footer>
   <div class="wrap">© 2026 Santiago Muscatiello. Misdealt is developed by GregTheFrogStudios.</div>
 </footer>
+
+<script>
+  // Swap the cover for the YouTube player only when someone clicks it.
+  document.querySelector('.trailer-play').addEventListener('click', function () {
+    var frame = document.createElement('iframe');
+    frame.src = 'https://www.youtube-nocookie.com/embed/YueFgNn9m4M?autoplay=1&rel=0';
+    frame.title = 'Misdealt trailer';
+    frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    frame.allowFullscreen = true;
+    document.getElementById('trailer').replaceChildren(frame);
+  });
+</script>
 
 </body>
 </html>
